@@ -1,0 +1,86 @@
+Employee Payroll Management System - How To Run
+================================================
+
+1. Run the Spring Boot web application
+--------------------------------------
+Open a terminal in:
+
+EmployeePayrollSystem
+
+Run:
+
+mvnw.cmd spring-boot:run
+
+The app starts an embedded Tomcat server and opens the browser automatically when supported.
+
+Open this URL:
+
+http://localhost:8099/login.html
+
+
+2. Login details
+----------------
+Admin user:
+Username: admin
+Password: admin123
+
+HR user:
+Username: hr
+Password: hr123
+
+Admin can delete employees, clear payslip history, and open the H2 console.
+HR can add/edit employees, generate payslips, export CSV, and view reports.
+
+
+3. Database
+-----------
+The project uses an H2 file database:
+
+EmployeePayrollSystem/data/payroll-db
+
+H2 console:
+
+http://localhost:8099/h2-console
+
+JDBC URL:
+
+jdbc:h2:file:./data/payroll-db
+
+Username: sa
+Password: leave blank
+
+
+4. If port 8099 is busy
+-----------------------
+Run on another port:
+
+mvnw.cmd spring-boot:run "-Dspring-boot.run.arguments=--server.port=9090"
+
+Then open:
+
+http://localhost:9090/login.html
+
+
+5. Build a runnable jar
+-----------------------
+mvnw.cmd -DskipTests package
+
+Run the jar:
+
+java -jar target/employee-payroll-system-1.0.0.jar
+
+
+6. Employee IDs to try
+----------------------
+EMP1001 - Arjun Mehta
+EMP1002 - Sneha Reddy
+EMP1003 - Kiran Rao
+EMP1004 - Divya Nair
+EMP1005 - Rahul Sharma
+
+Use any of these IDs on the Payslip Generator page.
+
+
+7. Legacy console version
+-------------------------
+The old console classes are still in the root src folder for reference, but the main project is now the Spring Boot website.
