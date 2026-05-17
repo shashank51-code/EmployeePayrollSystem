@@ -17,6 +17,10 @@ Open this URL:
 
 http://localhost:8099/login.html
 
+Railway deployment URL:
+
+https://employeepayrollsystem-production.up.railway.app/login.html
+
 
 2. Login details
 ----------------

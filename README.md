@@ -2,7 +2,13 @@
 
 A Spring Boot full-stack Employee Payroll Management System with a responsive HTML, CSS, and JavaScript web UI, REST APIs, Spring Security login, and H2 file database persistence.
 
-The app runs locally at:
+The deployed app is available at:
+
+```text
+https://employeepayrollsystem-production.up.railway.app/login.html
+```
+
+The app also runs locally at:
 
 ```text
 http://localhost:8099/login.html
@@ -88,6 +94,12 @@ Open:
 
 ```text
 http://localhost:8099/login.html
+```
+
+Railway deployment:
+
+```text
+https://employeepayrollsystem-production.up.railway.app/login.html
 ```
 
 ## H2 Console

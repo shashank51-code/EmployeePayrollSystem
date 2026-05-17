@@ -13,20 +13,27 @@ public class BrowserLauncher {
     @Value("${server.port:8099}")
     private int serverPort;
 
+    @Value("${payroll.app.public-url:}")
+    private String publicUrl;
+
     @Value("${payroll.app.open-browser:true}")
     private boolean openBrowser;
 
     @EventListener(ApplicationReadyEvent.class)
     public void openHomePage() {
+        String appUrl = publicUrl == null || publicUrl.isBlank()
+                ? "http://localhost:" + serverPort
+                : publicUrl;
+
         if (!openBrowser || !Desktop.isDesktopSupported()) {
-            System.out.println("Payroll web app is ready: http://localhost:" + serverPort + "/login.html");
+            System.out.println("Payroll web app is ready: " + appUrl + "/login.html");
             return;
         }
 
         try {
-            Desktop.getDesktop().browse(new URI("http://localhost:" + serverPort + "/login.html"));
+            Desktop.getDesktop().browse(new URI(appUrl + "/login.html"));
         } catch (Exception exception) {
-            System.out.println("Payroll web app is ready: http://localhost:" + serverPort + "/login.html");
+            System.out.println("Payroll web app is ready: " + appUrl + "/login.html");
         }
     }
 }
