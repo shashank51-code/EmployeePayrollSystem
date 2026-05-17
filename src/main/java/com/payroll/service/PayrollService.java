@@ -6,11 +6,13 @@ import com.payroll.dto.EmployeeRequest;
 import com.payroll.dto.EmployeeResponse;
 import com.payroll.dto.PayslipRecordResponse;
 import com.payroll.dto.PayslipResponse;
+import com.payroll.dto.SignupRequest;
 import com.payroll.model.Employee;
 import com.payroll.model.EmployeeStatus;
 import com.payroll.model.PayslipRecord;
 import com.payroll.repository.EmployeeRepository;
 import com.payroll.repository.PayslipRecordRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,27 +27,52 @@ import java.util.stream.Collectors;
 public class PayrollService {
     private final EmployeeRepository employeeRepository;
     private final PayslipRecordRepository payslipRecordRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public PayrollService(EmployeeRepository employeeRepository, PayslipRecordRepository payslipRecordRepository) {
+    public PayrollService(EmployeeRepository employeeRepository, PayslipRecordRepository payslipRecordRepository, PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
         this.payslipRecordRepository = payslipRecordRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<EmployeeResponse> listEmployees() {
+        return listEmployees(true);
+    }
+
+    public List<EmployeeResponse> listEmployees(boolean includeSalary) {
         return employeeRepository.findAll().stream()
                 .sorted(Comparator.comparing(Employee::getEmployeeId))
-                .map(EmployeeResponse::from)
+                .map(employee -> EmployeeResponse.from(employee, includeSalary))
                 .toList();
     }
 
     public EmployeeResponse getEmployee(String employeeId) {
-        return EmployeeResponse.from(findEmployee(employeeId));
+        return getEmployee(employeeId, true);
+    }
+
+    public EmployeeResponse getEmployee(String employeeId, boolean includeSalary) {
+        return EmployeeResponse.from(findEmployee(employeeId), includeSalary);
     }
 
     public EmployeeResponse addEmployee(EmployeeRequest request) {
         Employee employee = new Employee(nextEmployeeId(), request.name().trim(), request.department().trim(),
                 request.designation().trim(), request.basicSalary(), safeStatus(request.status()));
         return EmployeeResponse.from(employeeRepository.save(employee));
+    }
+
+    public EmployeeResponse signup(SignupRequest request) {
+        String employeeId = request.employeeId().trim().toUpperCase();
+        if (employeeRepository.existsById(employeeId)) {
+            throw new IllegalArgumentException("Employee ID already exists");
+        }
+        if (!request.password().equals(request.confirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        Employee employee = new Employee(employeeId, request.name().trim(), request.department().trim(),
+                request.designation().trim(), 0.0, EmployeeStatus.ACTIVE);
+        employee.setPassword(passwordEncoder.encode(request.password()));
+        return EmployeeResponse.publicFrom(employeeRepository.save(employee));
     }
 
     public EmployeeResponse updateEmployee(String employeeId, EmployeeRequest request) {
@@ -55,6 +82,14 @@ public class PayrollService {
         employee.setDesignation(request.designation().trim());
         employee.setBasicSalary(request.basicSalary());
         employee.setStatus(safeStatus(request.status()));
+        return EmployeeResponse.from(employeeRepository.save(employee));
+    }
+
+    public EmployeeResponse updateEmployeeProfile(String employeeId, EmployeeRequest request) {
+        Employee employee = findEmployee(employeeId);
+        employee.setName(request.name().trim());
+        employee.setDepartment(request.department().trim());
+        employee.setDesignation(request.designation().trim());
         return EmployeeResponse.from(employeeRepository.save(employee));
     }
 
@@ -83,6 +118,10 @@ public class PayrollService {
     }
 
     public DashboardSummary dashboardSummary() {
+        return dashboardSummary(true);
+    }
+
+    public DashboardSummary dashboardSummary(boolean includeSalary) {
         List<Employee> employees = employeeRepository.findAll();
         List<Employee> activeEmployees = employees.stream()
                 .filter(employee -> employee.getStatus() == EmployeeStatus.ACTIVE)
@@ -90,31 +129,31 @@ public class PayrollService {
         double totalPayout = activeEmployees.stream().mapToDouble(Employee::getNetSalary).sum();
         double averageSalary = activeEmployees.isEmpty() ? 0 : totalPayout / activeEmployees.size();
 
-        EmployeeResponse highestPaid = employees.stream()
+        EmployeeResponse highestPaid = includeSalary ? employees.stream()
                 .max(Comparator.comparingDouble(Employee::getNetSalary))
                 .map(EmployeeResponse::from)
-                .orElse(null);
-        EmployeeResponse lowestPaid = employees.stream()
+                .orElse(null) : null;
+        EmployeeResponse lowestPaid = includeSalary ? employees.stream()
                 .min(Comparator.comparingDouble(Employee::getNetSalary))
                 .map(EmployeeResponse::from)
-                .orElse(null);
+                .orElse(null) : null;
 
         List<EmployeeResponse> topEmployees = employees.stream()
                 .sorted(Comparator.comparing(Employee::getEmployeeId))
                 .limit(5)
-                .map(EmployeeResponse::from)
+                .map(employee -> EmployeeResponse.from(employee, includeSalary))
                 .toList();
 
         return new DashboardSummary(
                 employees.size(),
                 employees.stream().map(Employee::getDepartment).distinct().count(),
-                totalPayout,
-                averageSalary,
+                includeSalary ? totalPayout : 0,
+                includeSalary ? averageSalary : 0,
                 highestPaid,
                 lowestPaid,
                 topEmployees,
-                departmentReports(),
-                payslipHistory()
+                includeSalary ? departmentReports() : List.of(),
+                includeSalary ? payslipHistory() : List.of()
         );
     }
 

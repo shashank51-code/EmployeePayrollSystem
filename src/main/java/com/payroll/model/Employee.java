@@ -8,9 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -33,10 +31,11 @@ public class Employee {
     @Column(nullable = false)
     private String designation;
 
-    @NotNull
-    @DecimalMin("1.0")
     @Column(nullable = false)
-    private Double basicSalary;
+    private Double basicSalary = 0.0;
+
+    @Column
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -53,7 +52,7 @@ public class Employee {
         this.name = name;
         this.department = department;
         this.designation = designation;
-        this.basicSalary = basicSalary;
+        this.basicSalary = basicSalary == null ? 0.0 : basicSalary;
         this.status = status == null ? EmployeeStatus.ACTIVE : status;
     }
 
@@ -141,7 +140,15 @@ public class Employee {
     }
 
     public void setBasicSalary(Double basicSalary) {
-        this.basicSalary = basicSalary;
+        this.basicSalary = basicSalary == null ? 0.0 : basicSalary;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public EmployeeStatus getStatus() {

@@ -10,9 +10,9 @@
   <style>
     :root {
       --navy: #08162f;
-      --navy-2: #102851;
       --gold: #d9a441;
-      --muted: #7f8ba3;
+      --text: #172033;
+      --muted: #738097;
       --line: #e7ecf4;
       --danger: #c93737;
       --success: #14875b;
@@ -27,121 +27,66 @@
       min-height: 100vh;
       margin: 0;
       place-items: center;
-      background:
-        radial-gradient(circle at top left, rgba(217, 164, 65, 0.18), transparent 30%),
-        linear-gradient(135deg, var(--navy), #071025 58%, #0f2550);
-      color: #172033;
+      background: #f4f7fb;
+      color: var(--text);
       font-family: "DM Sans", "Segoe UI", sans-serif;
       padding: 24px;
     }
 
-    .shell {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      width: min(1060px, 100%);
-      min-height: 620px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 34px;
+    .login {
+      width: min(430px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 8px;
       background: #fff;
-      box-shadow: 0 35px 90px rgba(0, 0, 0, 0.28);
-    }
-
-    .hero {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      background:
-        linear-gradient(150deg, rgba(8, 22, 47, 0.96), rgba(16, 40, 81, 0.96)),
-        repeating-linear-gradient(45deg, transparent 0 18px, rgba(255, 255, 255, 0.05) 18px 19px);
-      color: #fff;
-      padding: 48px;
+      box-shadow: 0 18px 48px rgba(11, 25, 54, 0.12);
+      padding: 34px;
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
+      display: grid;
+      gap: 8px;
+      margin-bottom: 28px;
+      text-align: center;
     }
 
     .logo {
       display: grid;
       width: 52px;
       height: 52px;
+      margin: 0 auto;
       place-items: center;
-      border-radius: 17px;
-      background: rgba(217, 164, 65, 0.16);
+      border-radius: 8px;
+      background: var(--navy);
       color: var(--gold);
       font-size: 28px;
       font-weight: 800;
     }
 
     h1 {
-      margin: 34px 0 16px;
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 0.96;
-      letter-spacing: -0.06em;
-    }
-
-    .hero p {
-      max-width: 520px;
-      color: #bcc8df;
-      font-size: 17px;
-      line-height: 1.7;
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 32px;
-    }
-
-    .chip {
-      border: 1px solid rgba(217, 164, 65, 0.35);
-      border-radius: 999px;
-      background: rgba(217, 164, 65, 0.12);
-      color: #ffe0a0;
-      font-weight: 700;
-      padding: 10px 14px;
-    }
-
-    .login {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 48px;
-    }
-
-    .login h2 {
       margin: 0;
-      font-size: 32px;
-      letter-spacing: -0.04em;
-    }
-
-    .login > p {
-      margin: 10px 0 28px;
-      color: var(--muted);
+      color: var(--navy);
+      font-size: 25px;
+      line-height: 1.2;
     }
 
     label {
       display: grid;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       color: var(--muted);
       font-size: 13px;
       font-weight: 800;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
     }
 
     input {
       width: 100%;
       border: 1px solid var(--line);
-      border-radius: 16px;
-      color: #172033;
+      border-radius: 8px;
+      color: var(--text);
       font: inherit;
-      padding: 15px 16px;
+      padding: 14px;
       outline: none;
     }
 
@@ -153,38 +98,34 @@
     button {
       width: 100%;
       border: 0;
-      border-radius: 16px;
-      background: var(--gold);
-      color: var(--navy);
+      border-radius: 8px;
+      background: var(--navy);
+      color: #fff;
       cursor: pointer;
       font: inherit;
-      font-weight: 900;
-      padding: 15px 18px;
-      transition: 0.2s ease;
+      font-weight: 800;
+      padding: 14px 18px;
     }
 
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 35px rgba(217, 164, 65, 0.28);
+    .link {
+      margin: 18px 0 0;
+      text-align: center;
     }
 
-    .demo {
-      display: grid;
-      gap: 10px;
-      margin-top: 24px;
-      border-radius: 18px;
-      background: #f8fafc;
-      padding: 18px;
-    }
-
-    .demo strong {
+    a {
       color: var(--navy);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
 
     .message {
       display: none;
-      border-radius: 14px;
-      margin-bottom: 18px;
+      border-radius: 8px;
+      margin-bottom: 16px;
       padding: 12px 14px;
       font-weight: 700;
     }
@@ -195,79 +136,54 @@
       color: var(--danger);
     }
 
-    .message.logout {
+    .message.success {
       display: block;
       background: rgba(20, 135, 91, 0.1);
       color: var(--success);
     }
-
-    @media (max-width: 860px) {
-      .shell {
-        grid-template-columns: 1fr;
-      }
-
-      .hero,
-      .login {
-        padding: 32px;
-      }
-    }
   </style>
 </head>
 <body>
-  <main class="shell">
-    <section class="hero">
-      <div>
-        <div class="brand">
-          <div class="logo">P</div>
-          <div>
-            <strong>Payroll Suite</strong>
-            <div>Spring Boot + H2 Database</div>
-          </div>
-        </div>
-        <h1>Employee Payroll Management System</h1>
-        <p>Securely manage employees, calculate salaries, generate payslips, export payroll data, and review department-wise salary reports from one professional dashboard.</p>
-        <div class="chips">
-          <span class="chip">Spring Security</span>
-          <span class="chip">REST APIs</span>
-          <span class="chip">H2 Database</span>
-          <span class="chip">JPA</span>
-        </div>
-      </div>
-      <p>Interview note: the browser UI talks to Spring Boot controllers, which call the service layer and persist records through JPA repositories.</p>
-    </section>
+  <main class="login">
+    <div class="brand">
+      <div class="logo">P</div>
+      <h1>Employee Payroll Management System</h1>
+    </div>
 
-    <section class="login">
-      <h2>Sign in</h2>
-      <p>Use the demo credentials below to open the payroll dashboard.</p>
-      <div class="message" id="message"></div>
-      <form method="post" action="/login">
-        <label>
-          Username
-          <input name="username" autocomplete="username" placeholder="admin or hr" required>
-        </label>
-        <label>
-          Password
-          <input name="password" type="password" autocomplete="current-password" placeholder="Enter password" required>
-        </label>
-        <button type="submit">Open Payroll Dashboard</button>
-      </form>
-      <div class="demo">
-        <div><strong>Admin:</strong> admin / admin123</div>
-        <div><strong>HR:</strong> hr / hr123</div>
-      </div>
-    </section>
+    <div class="message" id="message"></div>
+
+    <form method="post" action="/login">
+      <label>
+        Employee ID
+        <input name="username" autocomplete="username" placeholder="admin or EMP1006" required>
+      </label>
+      <label>
+        Password
+        <input name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="link">New user? <a href="/signup.html">Sign up</a></p>
   </main>
 
   <script>
     const params = new URLSearchParams(location.search);
     const message = document.getElementById("message");
+
     if (params.has("error")) {
       message.className = "message error";
-      message.textContent = "Invalid username or password. Try admin/admin123 or hr/hr123.";
+      message.textContent = "Invalid username or password.";
     }
+
     if (params.has("logout")) {
-      message.className = "message logout";
-      message.textContent = "You have been logged out successfully.";
+      message.className = "message success";
+      message.textContent = "You have been logged out.";
+    }
+
+    if (params.has("signup")) {
+      message.className = "message success";
+      message.textContent = "Signup complete. Please login.";
     }
   </script>
 </body>

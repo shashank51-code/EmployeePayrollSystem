@@ -5,12 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import com.payroll.repository.EmployeeRepository;
 
 @Configuration
 public class SecurityConfig {
@@ -20,14 +21,18 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
                         new AntPathRequestMatcher("/api/**"),
                         new AntPathRequestMatcher("/h2-console/**"),
-                        new AntPathRequestMatcher("/login")
+                        new AntPathRequestMatcher("/login"),
+                        new AntPathRequestMatcher("/signup")
                 ))
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login.html", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/login.html", "/signup.html", "/signup", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/h2-console/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/employees/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/employees/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
-                        .requestMatchers("/api/**").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers("/api/reports/**").hasRole("ADMIN")
+                        .requestMatchers("/api/**").hasAnyRole("ADMIN", "EMPLOYEE")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
@@ -37,23 +42,32 @@ public class SecurityConfig {
                         .failureUrl("/login.html?error")
                         .permitAll()
                 )
-                .logout(logout -> logout.logoutSuccessUrl("/login.html?logout"));
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutSuccessUrl("/login.html?logout")
+                );
 
         return http.build();
     }
 
     @Bean
-    UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("admin")
+    UserDetailsService userDetailsService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
+        return username -> {
+            if ("admin".equalsIgnoreCase(username)) {
+                return User.withUsername("admin")
                         .password(passwordEncoder.encode("admin123"))
                         .roles("ADMIN")
-                        .build(),
-                User.withUsername("hr")
-                        .password(passwordEncoder.encode("hr123"))
-                        .roles("HR")
-                        .build()
-        );
+                        .build();
+            }
+
+            return employeeRepository.findById(username.toUpperCase())
+                    .filter(employee -> employee.getPassword() != null && !employee.getPassword().isBlank())
+                    .map(employee -> User.withUsername(employee.getEmployeeId())
+                            .password(employee.getPassword())
+                            .roles("EMPLOYEE")
+                            .build())
+                    .orElseThrow(() -> new UsernameNotFoundException(username));
+        };
     }
 
     @Bean

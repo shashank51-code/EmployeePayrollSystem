@@ -1,41 +1,71 @@
 # Employee Payroll Management System
 
-A Spring Boot full-stack Employee Payroll Management System with a professional HTML, CSS, and JavaScript web UI, REST APIs, Spring Security login, and H2 database persistence. Students run the Java Spring Boot application, then work from the browser at `http://localhost:8099`.
+A Spring Boot full-stack Employee Payroll Management System with a responsive HTML, CSS, and JavaScript web UI, REST APIs, Spring Security login, and H2 file database persistence.
+
+The app runs locally at:
+
+```text
+http://localhost:8099/login.html
+```
 
 ## Features
 
 - Spring Boot embedded Tomcat server
-- Auto-opens the browser to the payroll website after startup when desktop browsing is supported
 - Spring Security form login
-- BCrypt encoded in-memory demo users
-- Role-based access: `ADMIN` can delete records and access H2 console; `HR` can add, edit, report, and generate payslips
+- Admin and employee role-based access
+- Employee signup using Employee ID and password
+- New employee signup stores employee profile data in the H2 database
+- Admin can view all employees, assign salary, update status, delete employees, generate payslips, and view reports
+- Employees can view other employee profile details without salary information
+- Employees can generate only their own payslip
+- Employees can update their own profile details
+- Salary privacy protection for employee users
 - H2 file database stored under `data/payroll-db`
 - Spring Data JPA entities and repositories
-- REST APIs for employees, dashboard, reports, payslips, and history
-- Clean responsive dashboard with dark navy sidebar and gold accents
-- Add, edit, delete, view, search, and department-filter employees
-- Live salary preview while entering basic salary
-- Payslip generator by Employee ID
-- Quick payslip generation directly from the employee table
-- Printable payslip with employee details, earnings, deductions, gross salary, total deductions, and highlighted net salary
-- Payslip generation history stored in the database
-- Department-wise salary breakdown report
-- Highest paid employee, lowest paid employee, and total monthly payout summary
-- CSV export for payroll reporting
+- REST APIs for employees, profile, dashboard, reports, and payslips
+- Clean responsive dashboard
+- Department-wise salary report for admin
+- Highest paid employee, lowest paid employee, and total monthly payout summary for admin
 - Pre-loaded sample employee data
 
-## Login
+## Login Details
 
-| Role | Username | Password | Access |
-| --- | --- | --- | --- |
-| Admin | `admin` | `admin123` | Full access, delete employees, clear history, H2 console |
-| HR | `hr` | `hr123` | Add/edit employees, generate payslips, view reports |
+### Admin
+
+| Employee ID | Password | Access |
+| --- | --- | --- |
+| `admin` | `admin123` | Full admin access |
+
+### Employee
+
+Employees must create an account from the signup page using:
+
+- Employee ID
+- Name
+- Department
+- Designation
+- Password
+
+After signup, employees log in using their Employee ID and password.
+
+## Role Access
+
+| Feature | Admin | Employee |
+| --- | --- | --- |
+| View employee list | Yes | Yes, salary hidden |
+| Add employee | Yes | No |
+| Edit employee salary/status | Yes | No |
+| Delete employee | Yes | No |
+| View reports | Yes | No |
+| Generate any employee payslip | Yes | No |
+| Generate own payslip | Yes | Yes |
+| Update own profile | Fixed admin account | Yes |
 
 ## Salary Structure
 
 | Component | Calculation |
 | --- | --- |
-| Basic Salary | User defined |
+| Basic Salary | Assigned by admin |
 | HRA | 20% of Basic Salary |
 | DA | 10% of Basic Salary |
 | TA | 5% of Basic Salary |
@@ -45,6 +75,36 @@ A Spring Boot full-stack Employee Payroll Management System with a professional 
 | Insurance | 2% of Basic Salary |
 | Total Deductions | PF + Income Tax + Insurance |
 | Net Salary | Gross Salary - Total Deductions |
+
+## How To Run
+
+From the project folder:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+Open:
+
+```text
+http://localhost:8099/login.html
+```
+
+## H2 Console
+
+The H2 console is available to admin users at:
+
+```text
+http://localhost:8099/h2-console
+```
+
+Default database settings:
+
+| Field | Value |
+| --- | --- |
+| JDBC URL | `jdbc:h2:file:./data/payroll-db` |
+| Username | `sa` |
+| Password | empty |
 
 ## Technologies Used
 
@@ -58,4 +118,3 @@ A Spring Boot full-stack Employee Payroll Management System with a professional 
 - CSS3
 - JavaScript Fetch API
 - Maven Wrapper
-

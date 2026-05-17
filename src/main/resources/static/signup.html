@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | Employee Payroll Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#08162f;--gold:#d9a441;--text:#172033;--muted:#738097;--line:#e7ecf4;--danger:#c93737}
+    *{box-sizing:border-box}body{display:grid;min-height:100vh;margin:0;place-items:center;background:#f4f7fb;color:var(--text);font-family:"DM Sans","Segoe UI",sans-serif;padding:24px}.signup{width:min(480px,100%);border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 18px 48px rgba(11,25,54,.12);padding:34px}.brand{display:grid;gap:8px;margin-bottom:28px;text-align:center}.logo{display:grid;width:52px;height:52px;margin:0 auto;place-items:center;border-radius:8px;background:var(--navy);color:var(--gold);font-size:28px;font-weight:800}h1{margin:0;color:var(--navy);font-size:25px;line-height:1.2}.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}label{display:grid;gap:8px;margin-bottom:16px;color:var(--muted);font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}.full{grid-column:1/-1}input{width:100%;border:1px solid var(--line);border-radius:8px;color:var(--text);font:inherit;padding:14px;outline:none}input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(217,164,65,.16)}button{width:100%;border:0;border-radius:8px;background:var(--navy);color:#fff;cursor:pointer;font:inherit;font-weight:800;padding:14px 18px}.link{margin:18px 0 0;text-align:center}a{color:var(--navy);font-weight:800;text-decoration:none}a:hover{text-decoration:underline}.message{display:none;border-radius:8px;margin-bottom:16px;padding:12px 14px;background:rgba(201,55,55,.1);color:var(--danger);font-weight:700}.message.error{display:block}@media(max-width:560px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="signup">
+    <div class="brand">
+      <div class="logo">P</div>
+      <h1>Employee Payroll Management System</h1>
+    </div>
+    <div class="message" id="message"></div>
+    <form method="post" action="/signup" class="grid">
+      <label class="full">Employee ID<input name="employeeId" autocomplete="username" placeholder="EMP1006" required></label>
+      <label class="full">Name<input name="name" autocomplete="name" required></label>
+      <label>Department<input name="department" required></label>
+      <label>Designation<input name="designation" required></label>
+      <label>Password<input name="password" type="password" autocomplete="new-password" required></label>
+      <label>Confirm Password<input name="confirmPassword" type="password" autocomplete="new-password" required></label>
+      <div class="full"><button type="submit">Create Account</button></div>
+    </form>
+    <p class="link">Already have an account? <a href="/login.html">Login</a></p>
+  </main>
+  <script>
+    const params=new URLSearchParams(location.search),message=document.getElementById("message"),error=params.get("error");
+    if(error){message.className="message error";message.textContent=error}
+  </script>
+</body>
+</html>

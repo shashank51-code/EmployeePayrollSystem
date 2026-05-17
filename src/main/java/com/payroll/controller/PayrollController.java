@@ -9,6 +9,8 @@ import com.payroll.dto.PayslipResponse;
 import com.payroll.service.PayrollService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,18 +33,28 @@ public class PayrollController {
     }
 
     @GetMapping("/dashboard")
-    public DashboardSummary dashboard() {
-        return payrollService.dashboardSummary();
+    public DashboardSummary dashboard(Authentication authentication) {
+        return payrollService.dashboardSummary(isAdmin(authentication));
     }
 
     @GetMapping("/employees")
-    public List<EmployeeResponse> employees() {
-        return payrollService.listEmployees();
+    public List<EmployeeResponse> employees(Authentication authentication) {
+        return payrollService.listEmployees(isAdmin(authentication));
     }
 
     @GetMapping("/employees/{employeeId}")
-    public EmployeeResponse employee(@PathVariable String employeeId) {
-        return payrollService.getEmployee(employeeId);
+    public EmployeeResponse employee(@PathVariable String employeeId, Authentication authentication) {
+        return payrollService.getEmployee(employeeId, isAdmin(authentication) || authentication.getName().equalsIgnoreCase(employeeId));
+    }
+
+    @GetMapping("/profile")
+    public EmployeeResponse profile(Authentication authentication) {
+        return payrollService.getEmployee(authentication.getName(), true);
+    }
+
+    @PutMapping("/profile")
+    public EmployeeResponse updateProfile(@Valid @RequestBody EmployeeRequest request, Authentication authentication) {
+        return payrollService.updateEmployeeProfile(authentication.getName(), request);
     }
 
     @PostMapping("/employees")
@@ -63,7 +75,10 @@ public class PayrollController {
     }
 
     @PostMapping("/payslips/{employeeId}")
-    public PayslipResponse generatePayslip(@PathVariable String employeeId) {
+    public PayslipResponse generatePayslip(@PathVariable String employeeId, Authentication authentication) {
+        if (!isAdmin(authentication) && !authentication.getName().equalsIgnoreCase(employeeId)) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.FORBIDDEN, "Employees can generate only their own payslip");
+        }
         return payrollService.generatePayslip(employeeId);
     }
 
@@ -81,5 +96,11 @@ public class PayrollController {
     @GetMapping("/reports/departments")
     public List<DepartmentReport> departmentReports() {
         return payrollService.departmentReports();
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch("ROLE_ADMIN"::equals);
     }
 }

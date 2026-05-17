@@ -8,35 +8,43 @@ public record EmployeeResponse(
         String name,
         String department,
         String designation,
-        double basicSalary,
+        Double basicSalary,
         EmployeeStatus status,
-        double hra,
-        double da,
-        double ta,
-        double grossSalary,
-        double pf,
-        double tax,
-        double insurance,
-        double totalDeductions,
-        double netSalary
+        Double hra,
+        Double da,
+        Double ta,
+        Double grossSalary,
+        Double pf,
+        Double tax,
+        Double insurance,
+        Double totalDeductions,
+        Double netSalary
 ) {
     public static EmployeeResponse from(Employee employee) {
+        return from(employee, true);
+    }
+
+    public static EmployeeResponse publicFrom(Employee employee) {
+        return from(employee, false);
+    }
+
+    public static EmployeeResponse from(Employee employee, boolean includeSalary) {
         return new EmployeeResponse(
                 employee.getEmployeeId(),
                 employee.getName(),
                 employee.getDepartment(),
                 employee.getDesignation(),
-                employee.getBasicSalary(),
+                includeSalary ? employee.getBasicSalary() : null,
                 employee.getStatus(),
-                employee.getHRA(),
-                employee.getDA(),
-                employee.getTA(),
-                employee.getGrossSalary(),
-                employee.getPF(),
-                employee.getTax(),
-                employee.getInsurance(),
-                employee.getTotalDeductions(),
-                employee.getNetSalary()
+                includeSalary ? employee.getHRA() : null,
+                includeSalary ? employee.getDA() : null,
+                includeSalary ? employee.getTA() : null,
+                includeSalary ? employee.getGrossSalary() : null,
+                includeSalary ? employee.getPF() : null,
+                includeSalary ? employee.getTax() : null,
+                includeSalary ? employee.getInsurance() : null,
+                includeSalary ? employee.getTotalDeductions() : null,
+                includeSalary ? employee.getNetSalary() : null
         );
     }
 }
