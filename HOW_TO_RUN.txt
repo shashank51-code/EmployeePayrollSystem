@@ -15,7 +15,7 @@ The app starts an embedded Tomcat server and opens the browser automatically whe
 
 Open this URL:
 
-http://localhost:8099/login.html
+http://localhost:8080/login.html
 
 Railway deployment URL:
 
@@ -44,7 +44,7 @@ EmployeePayrollSystem/data/payroll-db
 
 H2 console:
 
-http://localhost:8099/h2-console
+http://localhost:8080/h2-console
 
 JDBC URL:
 
@@ -54,7 +54,7 @@ Username: sa
 Password: leave blank
 
 
-4. If port 8099 is busy
+4. If port 8080 is busy
 -----------------------
 Run on another port:
 

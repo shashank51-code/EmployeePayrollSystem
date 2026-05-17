@@ -11,7 +11,7 @@ https://employeepayrollsystem-production.up.railway.app/login.html
 The app also runs locally at:
 
 ```text
-http://localhost:8099/login.html
+http://localhost:8080/login.html
 ```
 
 ## Features
@@ -93,7 +93,7 @@ From the project folder:
 Open:
 
 ```text
-http://localhost:8099/login.html
+http://localhost:8080/login.html
 ```
 
 Railway deployment:
@@ -107,7 +107,7 @@ https://employeepayrollsystem-production.up.railway.app/login.html
 The H2 console is available to admin users at:
 
 ```text
-http://localhost:8099/h2-console
+http://localhost:8080/h2-console
 ```
 
 Default database settings:

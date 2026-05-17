@@ -10,7 +10,7 @@ import java.net.URI;
 
 @Component
 public class BrowserLauncher {
-    @Value("${server.port:8099}")
+    @Value("${server.port:8080}")
     private int serverPort;
 
     @Value("${payroll.app.public-url:}")
