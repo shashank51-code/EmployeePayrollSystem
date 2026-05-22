@@ -2,13 +2,8 @@
 
 A Spring Boot full-stack Employee Payroll Management System with a responsive HTML, CSS, and JavaScript web UI, REST APIs, Spring Security login, and PostgreSQL persistence.
 
-The deployed app is available at:
 
-```text
-https://employeepayrollsystem-production.up.railway.app/login.html
-```
-
-The app also runs locally at:
+The app runs locally at:
 
 ```text
 http://localhost:8080/login.html
