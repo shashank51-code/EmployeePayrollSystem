@@ -53,15 +53,6 @@ $env:JDBC_DATABASE_PASSWORD = 'your_password'
 .\\mvnw.cmd spring-boot:run
 ```
 
-Linux/macOS example:
-
-```bash
-export JDBC_DATABASE_URL='jdbc:postgresql://localhost:5432/payrolldb'
-export JDBC_DATABASE_USERNAME='payroll'
-export JDBC_DATABASE_PASSWORD='your_password'
-./mvnw spring-boot:run
-```
-
 Example psql commands to prepare the database (run as a superuser):
 
 ```sql
