@@ -8,7 +8,6 @@ The app runs locally at:
 ```text
 http://localhost:8080/login.html
 ```
-
 ## Features
 
 - Spring Boot embedded Tomcat server
