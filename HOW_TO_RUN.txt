@@ -17,9 +17,7 @@ Open this URL:
 
 http://localhost:8080/login.html
 
-Railway deployment URL:
 
-https://employeepayrollsystem-production.up.railway.app/login.html
 
 
 2. Login details
@@ -32,26 +30,46 @@ HR user:
 Username: hr
 Password: hr123
 
-Admin can delete employees, clear payslip history, and open the H2 console.
+Admin can delete employees and clear payslip history.
 HR can add/edit employees, generate payslips, export CSV, and view reports.
 
 
 3. Database
 -----------
-The project uses an H2 file database:
+The project uses PostgreSQL for persistence. Configure your database connection in
+`src/main/resources/application.properties` or preferably via environment variables.
 
-EmployeePayrollSystem/data/payroll-db
+Recommended (secure) approach:
 
-H2 console:
+1. Create a dedicated database and user (example commands shown below).
+2. Set environment variables before running the app:
 
-http://localhost:8080/h2-console
+PowerShell example:
 
-JDBC URL:
+```powershell
+$env:JDBC_DATABASE_URL = 'jdbc:postgresql://localhost:5432/payrolldb'
+$env:JDBC_DATABASE_USERNAME = 'payroll'
+$env:JDBC_DATABASE_PASSWORD = 'your_password'
+.\\mvnw.cmd spring-boot:run
+```
 
-jdbc:h2:file:./data/payroll-db
+Linux/macOS example:
 
-Username: sa
-Password: leave blank
+```bash
+export JDBC_DATABASE_URL='jdbc:postgresql://localhost:5432/payrolldb'
+export JDBC_DATABASE_USERNAME='payroll'
+export JDBC_DATABASE_PASSWORD='your_password'
+./mvnw spring-boot:run
+```
+
+Example psql commands to prepare the database (run as a superuser):
+
+```sql
+-- connect as postgres superuser
+CREATE DATABASE payrolldb;
+CREATE USER payroll WITH ENCRYPTED PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE payrolldb TO payroll;
+```
 
 
 4. If port 8080 is busy

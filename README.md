@@ -1,6 +1,6 @@
 # Employee Payroll Management System
 
-A Spring Boot full-stack Employee Payroll Management System with a responsive HTML, CSS, and JavaScript web UI, REST APIs, Spring Security login, and H2 file database persistence.
+A Spring Boot full-stack Employee Payroll Management System with a responsive HTML, CSS, and JavaScript web UI, REST APIs, Spring Security login, and PostgreSQL persistence.
 
 The deployed app is available at:
 
@@ -20,13 +20,13 @@ http://localhost:8080/login.html
 - Spring Security form login
 - Admin and employee role-based access
 - Employee signup using Employee ID and password
-- New employee signup stores employee profile data in the H2 database
+- New employee signup stores employee profile data in the PostgreSQL database
 - Admin can view all employees, assign salary, update status, delete employees, generate payslips, and view reports
 - Employees can view other employee profile details without salary information
 - Employees can generate only their own payslip
 - Employees can update their own profile details
 - Salary privacy protection for employee users
-- H2 file database stored under `data/payroll-db`
+- Uses PostgreSQL for persistence; configure connection in `src/main/resources/application.properties`
 - Spring Data JPA entities and repositories
 - REST APIs for employees, profile, dashboard, reports, and payslips
 - Clean responsive dashboard
@@ -102,21 +102,43 @@ Railway deployment:
 https://employeepayrollsystem-production.up.railway.app/login.html
 ```
 
-## H2 Console
+## Database
 
-The H2 console is available to admin users at:
+The application uses PostgreSQL. Example local connection:
 
 ```text
-http://localhost:8080/h2-console
+http://localhost:5432 (PostgreSQL server)
 ```
 
-Default database settings:
+Recommended approach: create a dedicated database and user, and set credentials via environment variables.
 
-| Field | Value |
-| --- | --- |
-| JDBC URL | `jdbc:h2:file:./data/payroll-db` |
-| Username | `sa` |
-| Password | empty |
+Example psql commands (run as postgres superuser):
+
+```sql
+CREATE DATABASE payrolldb;
+CREATE USER payroll WITH ENCRYPTED PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE payrolldb TO payroll;
+```
+
+Then set environment variables before running the app:
+
+PowerShell:
+
+```powershell
+$env:JDBC_DATABASE_URL = 'jdbc:postgresql://localhost:5432/payrolldb'
+$env:JDBC_DATABASE_USERNAME = 'payroll'
+$env:JDBC_DATABASE_PASSWORD = 'your_password'
+.\\mvnw.cmd spring-boot:run
+```
+
+Linux/macOS:
+
+```bash
+export JDBC_DATABASE_URL='jdbc:postgresql://localhost:5432/payrolldb'
+export JDBC_DATABASE_USERNAME='payroll'
+export JDBC_DATABASE_PASSWORD='your_password'
+./mvnw spring-boot:run
+```
 
 ## Technologies Used
 
@@ -125,7 +147,7 @@ Default database settings:
 - Spring MVC REST APIs
 - Spring Data JPA
 - Spring Security
-- H2 Database
+- PostgreSQL
 - HTML5
 - CSS3
 - JavaScript Fetch API
