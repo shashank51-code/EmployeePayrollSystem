@@ -82,63 +82,6 @@ After signup, employees log in using their Employee ID and password.
 | Total Deductions | PF + Income Tax + Insurance |
 | Net Salary | Gross Salary - Total Deductions |
 
-## How To Run
-
-From the project folder:
-
-```powershell
-.\mvnw.cmd spring-boot:run
-```
-
-Open:
-
-```text
-http://localhost:8080/login.html
-```
-
-Railway deployment:
-
-```text
-https://employeepayrollsystem-production.up.railway.app/login.html
-```
-
-## Database
-
-The application uses PostgreSQL. Example local connection:
-
-```text
-http://localhost:5432 (PostgreSQL server)
-```
-
-Recommended approach: create a dedicated database and user, and set credentials via environment variables.
-
-Example psql commands (run as postgres superuser):
-
-```sql
-CREATE DATABASE payrolldb;
-CREATE USER payroll WITH ENCRYPTED PASSWORD 'your_password';
-GRANT ALL PRIVILEGES ON DATABASE payrolldb TO payroll;
-```
-
-Then set environment variables before running the app:
-
-PowerShell:
-
-```powershell
-$env:JDBC_DATABASE_URL = 'jdbc:postgresql://localhost:5432/payrolldb'
-$env:JDBC_DATABASE_USERNAME = 'payroll'
-$env:JDBC_DATABASE_PASSWORD = 'your_password'
-.\\mvnw.cmd spring-boot:run
-```
-
-Linux/macOS:
-
-```bash
-export JDBC_DATABASE_URL='jdbc:postgresql://localhost:5432/payrolldb'
-export JDBC_DATABASE_USERNAME='payroll'
-export JDBC_DATABASE_PASSWORD='your_password'
-./mvnw spring-boot:run
-```
 
 ## Technologies Used
 
